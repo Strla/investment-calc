@@ -1,6 +1,7 @@
-import {Component, output, signal} from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
 import {FormsModule} from "@angular/forms";
 import {UserInput} from "./user-input.model";
+import {InvestmentService} from "../investment.service";
 
 @Component({
   selector: 'app-user-input',
@@ -12,7 +13,6 @@ import {UserInput} from "./user-input.model";
   styleUrl: './user-input.component.css'
 })
 export class UserInputComponent {
-  calculate = output<UserInput>();
   data = signal<UserInput>({
     initialInvestment: 0,
     annualInvestment: 0,
@@ -20,8 +20,10 @@ export class UserInputComponent {
     duration: 10
   });
 
+  private investmentService = inject(InvestmentService);
+
   onSubmit() {
-    this.calculate.emit(this.data())
+    this.investmentService.calculateInvestmentResults(this.data());
     this.data.set({
       initialInvestment: 0,
       annualInvestment: 0,
